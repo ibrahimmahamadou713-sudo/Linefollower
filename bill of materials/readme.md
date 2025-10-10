@@ -3,7 +3,7 @@
 
 |volgnummer|naam|omschrijving|nieuw/recup|kostprijs/stuk|aantal|subtotaal|
 |----------|----|------------|-----------|---------|------|---------|
-|         1|2 stks 18650 Batterij clip|            |           |              |      |         |
+|         1|2 stks 18650 Batterij clip|Voeding+batterijhouder|Nieuw           |2,63              |2      |4,54         |
 |         2|    |            |           |              |      |         |
 |         3|    |            |           |              |      |         |
 |         4|    |            |           |              |      |         |
