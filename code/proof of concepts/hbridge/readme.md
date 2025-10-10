@@ -1,96 +1,79 @@
 # H-Bridge proof of concept
 
 minimale hard- & software + stappenplan dat aantoont dat 2 motoren onafhankelijk van elkaar kunnen draaien, en (traploos) regelbaar zijn in snelheid en draairichting.
-// Motor links
-const int IN1_L = 5;
-const int IN2_L = 6;
-const int PWM_L = 9;
 
-// Motor rechts
-const int IN1_R = 7;
-const int IN2_R = 8;
-const int PWM_R = 10;
+// Pin-configuratie DRV8833
+const int AIN1 = 3;
+const int AIN2 = 4;
+const int BIN1 = 5;
+const int BIN2 = 6;
 
 void setup() {
-  pinMode(IN1_L, OUTPUT);
-  pinMode(IN2_L, OUTPUT);
-  pinMode(PWM_L, OUTPUT);
-
-  pinMode(IN1_R, OUTPUT);
-  pinMode(IN2_R, OUTPUT);
-  pinMode(PWM_R, OUTPUT);
-}
-
-// Functie: stuur 1 motor aan
-// snelheid: -255 = volle snelheid achteruit, 0 = uit, +255 = volle snelheid vooruit
-void setMotor(int in1, int in2, int pwmPin, int snelheid) {
-  if (snelheid > 0) {
-    digitalWrite(in1, HIGH);
-    digitalWrite(in2, LOW);
-    analogWrite(pwmPin, snelheid);
-  } else if (snelheid < 0) {
-    digitalWrite(in1, LOW);
-    digitalWrite(in2, HIGH);
-    analogWrite(pwmPin, -snelheid);
-  } else {
-    digitalWrite(in1, LOW);
-    digitalWrite(in2, LOW);
-    analogWrite(pwmPin, 0);
-  }
+  pinMode(AIN1, OUTPUT);
+  pinMode(AIN2, OUTPUT);
+  pinMode(BIN1, OUTPUT);
+  pinMode(BIN2, OUTPUT);
 }
 
 void loop() {
-  // --- Individueel testen ---
-  // Motor links vooruit traploos
+  // Vooruit: versnellen 
   for (int s = 0; s <= 255; s += 5) {
-    setMotor(IN1_L, IN2_L, PWM_L, s);
-    delay(40);
+    analogWrite(AIN1, s); analogWrite(AIN2, 0); // Motor A vooruit
+    analogWrite(BIN1, s); analogWrite(BIN2, 0); // Motor B vooruit
+    delay(50);
   }
+
+  // Rechts bocht vooruit
+  for (int i = 0; i < 50; i++) {
+    analogWrite(AIN1, 200); analogWrite(AIN2, 0); // linker motor trager
+    analogWrite(BIN1, 255); analogWrite(BIN2, 0); // rechter motor sneller
+    delay(50);
+  }
+
+  // Links bocht vooruit
+  for (int i = 0; i < 50; i++) {
+    analogWrite(AIN1, 255); analogWrite(AIN2, 0); // linker motor sneller
+    analogWrite(BIN1, 200); analogWrite(BIN2, 0); // rechter motor trager
+    delay(50);
+  }
+
+  // Vooruit: traploos vertragen 
   for (int s = 255; s >= 0; s -= 5) {
-    setMotor(IN1_L, IN2_L, PWM_L, s);
-    delay(40);
+    analogWrite(AIN1, s); analogWrite(AIN2, 0);
+    analogWrite(BIN1, s); analogWrite(BIN2, 0);
+    delay(50);
   }
 
-  delay(500);
-
-  // Motor rechts achteruit traploos
-  for (int s = 0; s >= -255; s -= 5) {
-    setMotor(IN1_R, IN2_R, PWM_R, s);
-    delay(40);
-  }
-  for (int s = -255; s <= 0; s += 5) {
-    setMotor(IN1_R, IN2_R, PWM_R, s);
-    delay(40);
+  // Achteruit: traploos versnellen 
+  for (int s = 0; s <= 255; s += 5) {
+    analogWrite(AIN1, 0); analogWrite(AIN2, s); // Motor A achteruit
+    analogWrite(BIN1, 0); analogWrite(BIN2, s); // Motor B achteruit
+    delay(50);
   }
 
-  delay(500);
-
-  // --- Beide motoren tegelijk, zelfde richting ---
-  // Traploos vooruit
-  for (int s = 0; s <= 200; s += 5) {
-    setMotor(IN1_L, IN2_L, PWM_L, s);
-    setMotor(IN1_R, IN2_R, PWM_R, s);
-    delay(40);
-  }
-  for (int s = 200; s >= 0; s -= 5) {
-    setMotor(IN1_L, IN2_L, PWM_L, s);
-    setMotor(IN1_R, IN2_R, PWM_R, s);
-    delay(40);
+  // Rechts bocht achteruit 
+  for (int i = 0; i < 50; i++) {
+    analogWrite(AIN1, 0); analogWrite(AIN2, 200); // linker motor trager
+    analogWrite(BIN1, 0); analogWrite(BIN2, 255); // rechter motor sneller
+    delay(50);
   }
 
-  delay(500);
-
-  // Traploos achteruit
-  for (int s = 0; s >= -200; s -= 5) {
-    setMotor(IN1_L, IN2_L, PWM_L, s);
-    setMotor(IN1_R, IN2_R, PWM_R, s);
-    delay(40);
-  }
-  for (int s = -200; s <= 0; s += 5) {
-    setMotor(IN1_L, IN2_L, PWM_L, s);
-    setMotor(IN1_R, IN2_R, PWM_R, s);
-    delay(40);
+  // Links bocht achteruit 
+  for (int i = 0; i < 50; i++) {
+    analogWrite(AIN1, 0); analogWrite(AIN2, 255); // linker motor sneller
+    analogWrite(BIN1, 0); analogWrite(BIN2, 200); // rechter motor trager
+    delay(50);
   }
 
-  delay(1000);
+  //  Achteruit: traploos vertragen 
+  for (int s = 255; s >= 0; s -= 5) {
+    analogWrite(AIN1, 0); analogWrite(AIN2, s);
+    analogWrite(BIN1, 0); analogWrite(BIN2, s);
+    delay(50);
+  }
+
+  //  Stoppen 
+  analogWrite(AIN1, 0); analogWrite(AIN2, 0);
+  analogWrite(BIN1, 0); analogWrite(BIN2, 0);
+  delay(2000); // korte pauze voordat loop opnieuw start
 }
