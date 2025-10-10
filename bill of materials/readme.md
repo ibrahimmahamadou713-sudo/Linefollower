@@ -14,5 +14,5 @@
 |         9|Rubberen wiel    |            | Nieuw          |3,55/10stuks              |1      | 3,55       |
 |         10|HC-05    | Module voor de draadloze communicatie           | nieuw          |2,54              |2      |4,93         |
 |         11|N20 mini Micro metal Gear Motor|            | nieuw          |3,69              |9      |32,58         |
-|         12|    |            |           |              |      |         |
-
+|         12|PCB    |  frame van de motor          | recup          |3,39/5stuks              |1      |3,39         |
+|         13|Arduino Leonardo   |  Microcontroller         | nieuw        |  19,99            |1      | 19,99        |
