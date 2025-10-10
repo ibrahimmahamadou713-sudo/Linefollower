@@ -1,7 +1,6 @@
 # H-Bridge proof of concept
 
 minimale hard- & software + stappenplan dat aantoont dat 2 motoren onafhankelijk van elkaar kunnen draaien, en (traploos) regelbaar zijn in snelheid en draairichting.
-
 // Motor links
 const int IN1_L = 5;
 const int IN2_L = 6;
